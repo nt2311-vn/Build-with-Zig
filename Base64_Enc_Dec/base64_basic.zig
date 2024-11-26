@@ -1,4 +1,5 @@
 const std = @import("std");
+const stdout = std.io.getStdOut().writer();
 
 const Base64 = struct {
     _table: *const [64]u8,
@@ -11,8 +12,23 @@ const Base64 = struct {
         return Base64{ ._table = upper ++ lower ++ numbers };
     }
 
-    pub fn charAt(self: Base64, index: u8) u8 {
+    fn charAt(self: Base64, index: u8) u8 {
         return self._table[index];
+    }
+
+    fn charIndex(self: Base64, char: u8) u8 {
+        if (char == '=') return 64;
+
+        var index: u8 = 0;
+        for (0..63) |_| {
+            if (self.charAt(index) == char) {
+                break;
+            }
+
+            index += 1;
+        }
+
+        return index;
     }
 };
 
